@@ -2,12 +2,18 @@ import "@/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import { Cairo_400Regular, Cairo_700Bold, Cairo_800ExtraBold } from "@expo-google-fonts/cairo";
+import { Tajawal_400Regular, Tajawal_700Bold } from "@expo-google-fonts/tajawal";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { Platform } from "react-native";
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { NotebookProvider } from "@/providers/notebook-provider";
+import { NotebookThemeSync } from "@/providers/notebook-theme-sync";
+import { AppLock } from "@/components/app-lock";
 import {
   SafeAreaFrameContext,
   SafeAreaInsetsContext,
@@ -27,6 +33,7 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({ Cairo_400Regular, Cairo_700Bold, Cairo_800ExtraBold, Tajawal_400Regular, Tajawal_700Bold });
   const initialInsets = initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
   const initialFrame = initialWindowMetrics?.frame ?? DEFAULT_WEB_FRAME;
 
@@ -78,18 +85,27 @@ export default function RootLayout() {
     };
   }, [initialInsets, initialFrame]);
 
+  if (!fontsLoaded && !fontError) return null;
+
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
+          <NotebookProvider>
+          <NotebookThemeSync />
+          <AppLock>
           {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
           {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
           {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="note/[id]" />
+            <Stack.Screen name="folder/[id]" />
             <Stack.Screen name="oauth/callback" />
           </Stack>
           <StatusBar style="auto" />
+          </AppLock>
+          </NotebookProvider>
         </QueryClientProvider>
       </trpc.Provider>
     </GestureHandlerRootView>

@@ -32,7 +32,7 @@ const env = {
   appSlug: "luxnotes-arabic",
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
-  logoUrl: "",
+  logoUrl: "/manus-storage/luxnotes-icon_3ec4fd47.png",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
@@ -86,6 +86,21 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
+    [
+      "expo-image-picker",
+      {
+        photosPermission: "Allow $(PRODUCT_NAME) to access your photos for note attachments.",
+        cameraPermission: "Allow $(PRODUCT_NAME) to use your camera for note attachments.",
+      },
+    ],
+    "expo-document-picker",
+    [
+      "expo-local-authentication",
+      {
+        faceIDPermission: "Allow $(PRODUCT_NAME) to use Face ID to protect your notes.",
+      },
+    ],
+    "expo-secure-store",
     [
       "expo-audio",
       {
