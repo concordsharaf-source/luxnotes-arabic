@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { calculateTextStats, detectWritingDirection, findNotes, getExcerpt, sortNotes } from "@/lib/notebook-utils";
+import { calculateTextStats, detectWritingDirection, findNotes, getExcerpt, normalizeSearchText, sortNotes } from "@/lib/notebook-utils";
 import type { Note } from "@/types/note";
 
 const note = (id: string, title: string, content: string, updatedAt: string, isPinned = false): Note => ({
@@ -33,6 +33,12 @@ describe("notebook utilities", () => {
     const notes = [note("1", "فكرة بحث", "محتوى قصير", "2026-01-01"), note("2", "Essay", "A SEARCHABLE paragraph", "2026-01-02")];
     expect(findNotes(notes, "search").map((item) => item.id)).toEqual(["2"]);
     expect(findNotes(notes, "فكرة").map((item) => item.id)).toEqual(["1"]);
+  });
+
+  it("normalizes Arabic composed and decomposed forms during search", () => {
+    const notes = [note("1", "أفكار اليوم", "", "2026-01-01")];
+    expect(normalizeSearchText("أفكار")).toBe(normalizeSearchText("أفكار"));
+    expect(findNotes(notes, "أفكار").map((item) => item.id)).toEqual(["1"]);
   });
 
   it("keeps pinned notes before notes sorted by date", () => {

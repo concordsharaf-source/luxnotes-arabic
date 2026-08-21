@@ -102,7 +102,9 @@ export function NotebookProvider({ children }: PropsWithChildren) {
     const source = data.notes.find((note) => note.id === id);
     if (!source) return null;
     const now = new Date().toISOString();
-    const copy: Note = { ...source, id: createId("note"), title: source.title ? `${source.title} — نسخة` : "ملاحظة بلا عنوان — نسخة", createdAt: now, updatedAt: now, isPinned: false, deletedAt: null };
+    const title = source.title ? `${source.title} — نسخة` : "ملاحظة بلا عنوان — نسخة";
+    const stats = calculateTextStats(`${title}\n${source.content}`);
+    const copy: Note = { ...source, id: createId("note"), title, ...stats, createdAt: now, updatedAt: now, isPinned: false, deletedAt: null };
     await commit({ ...data, notes: [copy, ...data.notes] });
     return copy;
   }, [commit, data]);

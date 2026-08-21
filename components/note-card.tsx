@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { GlassSurface } from "@/components/glass-surface";
 import { useColors } from "@/hooks/use-colors";
-import { formatDate, getExcerpt } from "@/lib/notebook-utils";
+import { formatDate, getExcerpt, normalizeSearchText } from "@/lib/notebook-utils";
 import type { Note } from "@/types/note";
 
 type NoteCardProps = {
@@ -16,11 +16,13 @@ function HighlightedText({ text, query, style }: { text: string; query?: string;
   const colors = useColors();
   const safeText = text || "ملاحظة بلا عنوان";
   if (!query?.trim()) return <Text style={style} numberOfLines={1}>{safeText}</Text>;
-  const index = safeText.toLocaleLowerCase().indexOf(query.trim().toLocaleLowerCase());
+  const displayText = safeText.normalize("NFC");
+  const normalizedQuery = normalizeSearchText(query.trim());
+  const index = normalizeSearchText(displayText).indexOf(normalizedQuery);
   if (index < 0) return <Text style={style} numberOfLines={1}>{safeText}</Text>;
-  const before = safeText.slice(0, index);
-  const match = safeText.slice(index, index + query.trim().length);
-  const after = safeText.slice(index + query.trim().length);
+  const before = displayText.slice(0, index);
+  const match = displayText.slice(index, index + normalizedQuery.length);
+  const after = displayText.slice(index + normalizedQuery.length);
   return <Text style={style} numberOfLines={1}>{before}<Text style={{ backgroundColor: "#E6E8FF", color: colors.foreground }}>{match}</Text>{after}</Text>;
 }
 

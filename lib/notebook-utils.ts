@@ -20,6 +20,10 @@ export function calculateTextStats(text: string): { wordCount: number; character
   };
 }
 
+export function normalizeSearchText(text: string): string {
+  return text.normalize("NFC").toLocaleLowerCase();
+}
+
 export function withTextStats(note: Note): Note {
   const stats = calculateTextStats(`${note.title}\n${note.content}`);
   return { ...note, ...stats };
@@ -46,9 +50,9 @@ export function sortNotes(notes: Note[], option: SortOption): Note[] {
 }
 
 export function findNotes(notes: Note[], query: string): Note[] {
-  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const normalizedQuery = normalizeSearchText(query.trim());
   if (!normalizedQuery) return notes;
-  return notes.filter((note) => getPlainText(note).toLocaleLowerCase().includes(normalizedQuery));
+  return notes.filter((note) => normalizeSearchText(getPlainText(note)).includes(normalizedQuery));
 }
 
 export function getExcerpt(content: string, limit = 128): string {
