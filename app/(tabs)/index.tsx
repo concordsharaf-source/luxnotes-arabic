@@ -57,7 +57,7 @@ export default function NotesHomeScreen() {
         ListHeaderComponent={
           <View>
             <View style={styles.header}>
-              <Pressable accessibilityLabel="تغيير ترتيب الملاحظات" onPress={cycleSort} style={({ pressed }) => [styles.iconButton, { backgroundColor: colors.surface, borderColor: colors.border }, pressed && styles.pressed]}>
+              <Pressable accessibilityLabel="فتح الإعدادات" onPress={() => router.push("/settings")} style={({ pressed }) => [styles.iconButton, { backgroundColor: colors.surface, borderColor: colors.border }, pressed && styles.pressed]}>
                 <MaterialIcons name="tune" size={21} color={colors.foreground} />
               </Pressable>
               <NotebookMark />
