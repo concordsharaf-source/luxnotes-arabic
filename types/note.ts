@@ -21,6 +21,7 @@ export type Note = {
   folderId: string | null;
   isFavorite: boolean;
   isPinned: boolean;
+  labelColor: string | null;
   images: NoteImage[];
   wordCount: number;
   characterCount: number;

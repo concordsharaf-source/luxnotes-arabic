@@ -20,6 +20,11 @@ export async function verifyPin(pin: string): Promise<boolean> {
   return (await SecureStore.getItemAsync(PIN_KEY)) === pin;
 }
 
+export async function getPinLength(): Promise<number> {
+  if (Platform.OS === "web") return getWebStorage()?.getItem(PIN_KEY)?.length ?? 0;
+  return (await SecureStore.getItemAsync(PIN_KEY))?.length ?? 0;
+}
+
 export async function clearPin(): Promise<void> {
   if (Platform.OS === "web") {
     getWebStorage()?.removeItem(PIN_KEY);

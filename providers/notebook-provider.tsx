@@ -65,6 +65,7 @@ export function NotebookProvider({ children }: PropsWithChildren) {
       folderId: draft.folderId ?? null,
       isFavorite: false,
       isPinned: false,
+      labelColor: null,
       images: draft.images ?? [],
       ...stats,
       deletedAt: null,

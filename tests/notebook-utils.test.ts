@@ -13,6 +13,7 @@ const note = (id: string, title: string, content: string, updatedAt: string, isP
   folderId: null,
   isFavorite: false,
   isPinned,
+  labelColor: null,
   images: [],
   wordCount: 0,
   characterCount: 0,

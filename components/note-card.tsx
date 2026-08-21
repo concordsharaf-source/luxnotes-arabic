@@ -1,7 +1,9 @@
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { GlassSurface } from "@/components/glass-surface";
+import { NoteActionsSheet } from "@/components/note-actions-sheet";
 import { useColors } from "@/hooks/use-colors";
 import { formatDate, getExcerpt, normalizeSearchText } from "@/lib/notebook-utils";
 import type { Note } from "@/types/note";
@@ -28,11 +30,14 @@ function HighlightedText({ text, query, style }: { text: string; query?: string;
 
 export function NoteCard({ note, query, onPress }: NoteCardProps) {
   const colors = useColors();
+  const [actionsVisible, setActionsVisible] = useState(false);
   const hasImage = Boolean(note.images[0]?.uri);
   const excerpt = getExcerpt(note.content) || (hasImage ? "ملاحظة تتضمن صورًا مرفقة" : "ابدأ بكتابة فكرتك هنا…");
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.pressable, pressed && styles.pressed]} accessibilityRole="button">
+    <>
+    <Pressable onPress={onPress} onLongPress={() => setActionsVisible(true)} delayLongPress={380} style={({ pressed }) => [styles.pressable, pressed && styles.pressed]} accessibilityRole="button" accessibilityHint="اضغط مطولًا لعرض إجراءات الملاحظة">
       <GlassSurface style={styles.card}>
+        {note.labelColor && <View style={[styles.labelStripe, { backgroundColor: note.labelColor }]} />}
         <View style={styles.topRow}>
           <View style={styles.titleArea}>
             <View style={styles.badges}>
@@ -51,13 +56,16 @@ export function NoteCard({ note, query, onPress }: NoteCardProps) {
         </View>
       </GlassSurface>
     </Pressable>
+    <NoteActionsSheet note={note} visible={actionsVisible} onClose={() => setActionsVisible(false)} />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   pressable: { marginBottom: 11 },
   pressed: { opacity: 0.72, transform: [{ scale: 0.985 }] },
-  card: { paddingHorizontal: 17, paddingVertical: 16 },
+  card: { paddingHorizontal: 17, paddingVertical: 16, position: "relative", overflow: "hidden" },
+  labelStripe: { position: "absolute", right: 0, top: 13, bottom: 13, width: 5, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
   topRow: { flexDirection: "row", alignItems: "flex-start", gap: 12 },
   titleArea: { flex: 1, minWidth: 0 },
   badges: { height: 17, flexDirection: "row", gap: 6, marginBottom: 5, justifyContent: "flex-end" },

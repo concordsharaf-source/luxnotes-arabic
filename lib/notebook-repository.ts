@@ -43,6 +43,7 @@ function normalizeData(value: NotebookData): NotebookData {
       deletedAt: note.deletedAt ?? null,
       isFavorite: Boolean(note.isFavorite),
       isPinned: Boolean(note.isPinned),
+      labelColor: note.labelColor ?? null,
     })),
     folders: value.folders.length ? value.folders : defaultFolders,
     settings: { ...defaultSettings, ...value.settings },

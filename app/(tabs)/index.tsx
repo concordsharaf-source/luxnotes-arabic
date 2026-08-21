@@ -68,7 +68,7 @@ export default function NotesHomeScreen() {
             </View>
             <GlassSurface style={styles.searchBox}>
               <MaterialIcons name="search" size={22} color={colors.muted} />
-              <TextInput value={query} onChangeText={setQuery} placeholder="ابحث في ملاحظاتك…" placeholderTextColor={colors.muted} style={[styles.searchInput, { color: colors.foreground }]} textAlign="right" returnKeyType="search" />
+              <TextInput value={query} onChangeText={setQuery} placeholder="ابحث في ملاحظاتك…" placeholderTextColor={colors.muted} style={[styles.searchInput, { color: colors.foreground, writingDirection: "rtl" }]} textAlign="right" returnKeyType="search" />
               {query.length > 0 && <Pressable accessibilityLabel="مسح البحث" onPress={() => setQuery("")} style={({ pressed }) => [styles.clearButton, pressed && styles.pressed]}><MaterialIcons name="close" size={18} color={colors.muted} /></Pressable>}
             </GlassSurface>
             <View style={styles.toolbar}>

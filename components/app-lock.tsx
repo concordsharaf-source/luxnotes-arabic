@@ -5,7 +5,7 @@ import { AppState, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { NotebookMark } from "@/components/notebook-mark";
 import { useColors } from "@/hooks/use-colors";
-import { verifyPin } from "@/lib/security";
+import { getPinLength, verifyPin } from "@/lib/security";
 import { useNotebook } from "@/providers/notebook-provider";
 
 export function AppLock({ children }: { children: React.ReactNode }) {
@@ -38,7 +38,8 @@ export function AppLock({ children }: { children: React.ReactNode }) {
     const next = `${pin}${digit}`;
     setPin(next);
     setError("");
-    if (next.length >= 4) {
+    const savedPinLength = await getPinLength();
+    if (savedPinLength > 0 && next.length >= savedPinLength) {
       const valid = await verifyPin(next);
       if (valid) { setLocked(false); setPin(""); }
       else { setError("رمز القفل غير صحيح"); setPin(""); }
