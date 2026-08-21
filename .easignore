@@ -1,0 +1,16 @@
+# Expo and development artefacts
+.expo/
+.expo-shared/
+node_modules/
+.manus-logs/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Test and platform output
+coverage/
+dist/
+android/
+ios/
